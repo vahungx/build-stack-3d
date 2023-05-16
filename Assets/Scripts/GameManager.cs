@@ -18,21 +18,27 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         spawners = FindObjectsOfType<CubeSpawner>();
+        gameState = GameState.Start;
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if(gameState == GameState.Start)
         {
-            if (MovingCube.CurrentCube != null)
+            if (Input.GetButtonDown("Fire1"))
             {
-                MovingCube.CurrentCube.Stop();
+                if (MovingCube.CurrentCube != null)
+                {
+                    MovingCube.CurrentCube.Stop();
+                    FindAnyObjectByType<AudioManager>().Play("drop");
+                }
+                spawnerIndex = spawnerIndex == 0 ? 1 : 0;
+                currentSpawner = spawners[spawnerIndex];
+                currentSpawner.SpawnCube();
+                OnCubeSpawned();
             }
-            spawnerIndex = spawnerIndex == 0 ? 1 : 0;
-            currentSpawner = spawners[spawnerIndex];
-            currentSpawner.SpawnCube();
-            OnCubeSpawned();
         }
+
         GameStateManagement(gameState);
     }
 
@@ -42,6 +48,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Start:
                 Time.timeScale = 1f;
+                GameManager.gameState = GameState.Play;
                 break;
 
             case GameState.End:
@@ -53,9 +60,17 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(0);
                 break;
 
-            case GameState.Loader:
+            case GameState.Pause:
+                Time.timeScale = 0; 
                 break;
 
+            case GameState.Settings:
+                Time.timeScale = 0;
+                break;
+
+            case GameState.Play:
+                    Time.timeScale = 1f;
+                break;
             default: break;
         }
     }
@@ -64,9 +79,12 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     Start,
+    Pause,
     End,
     Loader,
-    Restart
+    Restart,
+    Settings,
+    Play
 }
 
 

@@ -15,6 +15,10 @@ public class MovingCube : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 1f;
 
+    private void Awake()
+    {
+        
+    }
 
     private void OnEnable()
     {   
@@ -43,6 +47,7 @@ public class MovingCube : MonoBehaviour
 
         if (Mathf.Abs(hangover) >= max )
         {
+            FindAnyObjectByType<AudioManager>().Play("gameover");
             GameManager.gameState = GameState.End;
         }
 
@@ -139,4 +144,19 @@ public class MovingCube : MonoBehaviour
 
     }
 
+    internal void SpeedSetting(string speed)
+    {
+        if(speed == "easy")
+        {
+            moveSpeed = PlayerPrefs.GetFloat("easySpeed", 0.7f);
+        }
+        if(speed == "medium")
+        {
+            moveSpeed = PlayerPrefs.GetFloat("mediumSpeed", 1.5f);
+        }
+        if(speed == "hard")
+        {
+            moveSpeed = PlayerPrefs.GetFloat("hardSpeed", 2f);
+        }
+    }
 }
