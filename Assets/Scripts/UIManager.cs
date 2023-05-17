@@ -143,16 +143,16 @@ public class UIManager : MonoBehaviour
 
     public void Mute()
     {
-        muteButton.SetActive(true);
-        unMuteButton.SetActive(false);
+        muteButton.SetActive(false);
+        unMuteButton.SetActive(true);
         FindAnyObjectByType<AudioManager>().Play("button");
         FindAnyObjectByType<AudioManager>().Mute();
     }
 
     public void UnMute()
     {
-        muteButton.SetActive(false);
-        unMuteButton.SetActive(true);
+        muteButton.SetActive(true);
+        unMuteButton.SetActive(false);
         FindAnyObjectByType<AudioManager>().Play("button");
         FindAnyObjectByType<AudioManager>().UnMute();
     }
@@ -173,5 +173,3 @@ public class UIManager : MonoBehaviour
         FindAnyObjectByType<AudioManager>().Play("button");
     }
 }
-
-

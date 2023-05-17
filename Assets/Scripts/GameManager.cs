@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(gameState == GameState.Start)
+        GameStateManagement(gameState);
+
+        if (gameState == GameState.Play)
         {
             if (Input.GetButtonDown("Fire1"))
             {
@@ -38,8 +40,6 @@ public class GameManager : MonoBehaviour
                 OnCubeSpawned();
             }
         }
-
-        GameStateManagement(gameState);
     }
 
     private void GameStateManagement(GameState gameState)
