@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class MovingCube : MonoBehaviour
 {
     public static MovingCube CurrentCube { get; private set; }
-    internal GameState GameState { get; private set; }
     public static MovingCube LastCube { get; private set; }
     public MoveDirection MoveDirection { get; internal set; }
     [SerializeField] private Renderer renderer;
@@ -23,9 +22,23 @@ public class MovingCube : MonoBehaviour
         }
         CurrentCube = this;
 
-        GetComponent<Renderer>().material.color = GetRandomColor();
+        renderer.material.color = GetRandomColor();
 
         transform.localScale = new Vector3 (LastCube.transform.localScale.x, transform.localScale.y, LastCube.transform.localScale.z);
+    }
+
+    private void Update()
+    {
+        if (MoveDirection == MoveDirection.Z)
+        {
+            transform.position += transform.forward * Time.deltaTime * moveSpeed;
+            if (transform.position.z > 1.2f) Common.GameStatus.Current = Common.GameStatus.GameState.End;
+        }
+        else
+        {
+            transform.position += transform.right * Time.deltaTime * moveSpeed;
+            if (transform.position.z > 1.2f) Common.GameStatus.Current = Common.GameStatus.GameState.End;
+        }
     }
 
     private Color GetRandomColor()
@@ -108,6 +121,7 @@ public class MovingCube : MonoBehaviour
     private void SpawnDropCube(float fallingBlockZPosition, float fallingBlockSize)
     {
         var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        if (CurrentCube == GameObject.Find("Start").GetComponent<MovingCube>()) return;
         if (MoveDirection == MoveDirection.Z)
         {
             cube.transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, fallingBlockSize);
@@ -119,22 +133,7 @@ public class MovingCube : MonoBehaviour
             cube.transform.position = new Vector3(fallingBlockZPosition, transform.position.y, transform.position.z);
         }
             cube.AddComponent<Rigidbody>();
-            cube.GetComponent<Renderer>().material.color = GetRandomColor();
-        
-
-
-        Destroy(cube.gameObject, 1f);
-    }
-
-    private void Update()
-    {
-        if (MoveDirection == MoveDirection.Z)
-        {
-            transform.position += transform.forward * Time.deltaTime * moveSpeed;
-        }
-        else
-        {
-            transform.position += transform.right * Time.deltaTime * moveSpeed;
-        }
+            cube.GetComponent<Renderer>().material.color = renderer.material.color;
+        Destroy(cube.gameObject,1f);
     }
 }

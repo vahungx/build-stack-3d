@@ -34,8 +34,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;
-
-                if (MovingCube.CurrentCube != null )
+                if (MovingCube.CurrentCube != null && MovingCube.CurrentCube != GameObject.Find("Start"))
                 {
                     MovingCube.CurrentCube.Stop();
                     AudioManager.instance.Play(Common.Audio.DROPPING_SOUND);
@@ -44,19 +43,11 @@ public class GameManager : MonoBehaviour
                 currentSpawner = spawners[spawnerIndex];
                 currentSpawner.SpawnCube();
                 OnCubeSpawned();
+
             }
         }
     }
 }
 
-public enum GameState
-{
-    Start,
-    End,
-    Restart,
-    Pause,
-    Settings,
-    Play,
-}
 
 

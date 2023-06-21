@@ -34,11 +34,6 @@ public class UIManager : MonoBehaviour
         Common.GameStatus.Playing += ReloadTimeScale;
     }
 
-    private void ReloadTimeScale()
-    {
-        Time.timeScale = 1;
-    }
-
     private void Update()
     {
         switch (Common.GameStatus.Current)
@@ -63,6 +58,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void ReloadTimeScale()
+    {
+        Time.timeScale = 1;
+    }
+
     private void GameManager_OnCubeSpawned()
     {   if (Common.GameStatus.Current != Common.GameStatus.GameState.End)
         {
@@ -83,14 +83,19 @@ public class UIManager : MonoBehaviour
        Common.GameStatus.Current = Common.GameStatus.GameState.End;
         endPanel.SetActive(true);
         startPanel.SetActive(false);
-        overScoreTMP.text = "Score: " + (score - 1).ToString();
+        
 
         if (highScore <= score)
         {
             PlayerPrefs.SetInt("highScore", score);
+            highScoreTMP.text = "";
+            overScoreTMP.text = "New High Score: " + (score - 1).ToString();
         }
-
-        highScoreTMP.text = "High Score: " + (highScore - 1).ToString();
+        else
+        {
+            overScoreTMP.text = "Score: " + (score - 1).ToString();
+            highScoreTMP.text = "High Score: " + (highScore - 1).ToString();
+        }
     }
 
     private void PauseEnable()
